@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontre seu Caminho - UNIFESP | Portfólio Morisson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .unifesp-green { background-color: #006838; }
+        .unifesp-text { color: #006838; }
+        .unifesp-border { border-color: #006838; }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 104, 56, 0.1), 0 8px 10px -6px rgba(0, 104, 56, 0.1); }
+        .option-card { border: 2px solid #e2e8f0; cursor: pointer; transition: all 0.2s; border-radius: 1rem; }
+        .option-card:hover { border-color: #006838; background-color: #f0fff4; transform: scale(1.01); }
+        .btn-primary { background-color: #006838; color: white; transition: all 0.3s; }
+        .btn-primary:hover { background-color: #004d2a; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,104,56,0.2); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="unifesp-green w-8 h-8 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-xs">U</span>
+                </div>
+                <span class="font-extrabold text-xl tracking-tight text-gray-800">UNIFESP <span class="text-green-700 font-light">CARREIRAS</span></span>
+            </div>
+            <div class="hidden md:block text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                Orientação, Inclusão & Permanência
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow container mx-auto px-4 py-8 md:py-16 max-w-4xl">
+        
+        <!-- Progress Indicator -->
+        <div id="progress-container" class="hidden mb-12">
+            <div class="flex justify-between items-end mb-3">
+                <div>
+                    <span class="text-[10px] font-black unifesp-text uppercase tracking-[0.2em]">Mapeamento de Perfil</span>
+                    <h4 id="current-step-label" class="text-sm font-bold text-gray-500">Analizando respostas...</h4>
+                </div>
+                <span id="progress-text" class="text-2xl font-black unifesp-text">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 p-1">
+                <div id="progress-bar" class="unifesp-green h-1 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(0,104,56,0.3)]" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- STEP 1: IDENTIFICAÇÃO -->
+        <section id="step-intro" class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">Qual é o seu caminho?</h1>
+                <p class="text-gray-500 max-w-lg mx-auto">Esta ferramenta ajudará você a descobrir o curso que mais combina com seu perfil e como a UNIFESP apoia sua entrada e permanência.</p>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] p-8 md:p-12 card-shadow border border-gray-100">
+                <form id="form-user-data" class="space-y-8">
+                    <div class="space-y-4">
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest">Nome Completo</label>
+                        <input type="text" id="user-name" required class="w-full p-5 border-2 border-gray-100 rounded-2xl focus:border-green-500 focus:ring-0 outline-none transition-all text-lg font-medium" placeholder="Como você quer ser chamado?">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest">Escola de Origem</label>
+                            <select id="user-school" class="w-full p-5 border-2 border-gray-100 rounded-2xl bg-white outline-none focus:border-green-500 font-medium cursor-pointer">
+                                <option value="publica">Escola Pública</option>
+                                <option value="privada_bolsa">Particular (com Bolsa Integral)</option>
+                                <option value="privada">Particular (sem Bolsa)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest">Sistema de Cotas</label>
+                            <select id="user-quota" class="w-full p-5 border-2 border-gray-100 rounded-2xl bg-white outline-none focus:border-green-500 font-medium cursor-pointer">
+                                <option value="ampla">Ampla Concorrência</option>
+                                <option value="ppi">PPI (Pretos, Pardos ou Indígenas)</option>
+                                <option value="pcd">PcD (Pessoa com Deficiência)</option>
+                                <option value="baixa_renda">L1/L2 (Renda Inferior a 1 salário mínimo)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="startTest()" class="btn-primary w-full py-6 text-xl font-black rounded-2xl shadow-xl mt-4 flex items-center justify-center space-x-3 group">
+                        <span>Começar Mapeamento</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- STEP 2: O QUIZ (10 Perguntas) -->
+        <section id="step-quiz" class="hidden">
+            <div class="bg-white rounded-[2.5rem] p-10 card-shadow border border-gray-100 min-h-[450px] flex flex-col justify-center">
+                <div class="mb-10 text-center">
+                    <span id="question-category" class="text-[10px] font-black px-4 py-2 rounded-full unifesp-green text-white uppercase tracking-[0.2em]">Categoria</span>
+                    <h3 id="question-text" class="text-2xl md:text-3xl font-black text-gray-900 mt-6 leading-tight max-w-2xl mx-auto">Carregando pergunta...</h3>
+                </div>
+                <div id="options-container" class="grid grid-cols-1 gap-3 max-w-xl mx-auto w-full"></div>
+            </div>
+        </section>
+
+        <!-- STEP 3: RESULTADO -->
+        <section id="step-result" class="hidden space-y-8 animate-in zoom-in-95 duration-700">
+            <div class="bg-white rounded-[3rem] p-8 md:p-12 card-shadow border-t-[12px] unifesp-border relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="text-center mb-10">
+                        <h2 class="text-4xl font-black text-gray-900 mb-2">Seu Perfil Unifesp</h2>
+                        <p id="user-congrats" class="text-gray-500 font-medium">Parabéns! Você encontrou seu caminho.</p>
+                    </div>
+                    
+                    <!-- Curso Recomendado -->
+                    <div class="bg-green-50 rounded-[2.5rem] p-8 border-2 border-green-100 mb-8">
+                        <div class="flex flex-col items-center text-center">
+                            <div id="result-modality-badge" class="bg-green-600 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Modalidade</div>
+                            <h3 id="result-course-name" class="text-4xl md:text-5xl font-black unifesp-text mb-4 tracking-tighter">Curso</h3>
+                            <div id="course-description" class="text-gray-700 leading-relaxed mb-6"></div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full text-left bg-white p-6 rounded-2xl border border-green-100">
+                                <div>
+                                    <h4 class="font-black text-xs uppercase text-gray-400 mb-3 tracking-widest">Foco de Estudo</h4>
+                                    <ul id="study-tips" class="text-sm space-y-2 text-gray-600"></ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-black text-xs uppercase text-gray-400 mb-3 tracking-widest">Localização</h4>
+                                    <p id="result-campus" class="text-sm font-bold text-green-800"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIREITOS E INGRESSO -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-blue-900 rounded-3xl p-8 text-white">
+                            <h4 class="text-xl font-black mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.965 7.965 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"></path></svg>
+                                Guia de Ingresso
+                            </h4>
+                            <div id="quota-analysis-content" class="text-sm text-blue-100 space-y-4"></div>
+                            <a href="https://sisu.mec.gov.br" target="_blank" class="inline-block mt-6 text-xs font-bold uppercase tracking-widest border-b-2 border-blue-400 pb-1 hover:text-blue-300 transition-colors">Acessar o SiSU →</a>
+                        </div>
+
+                        <div class="bg-emerald-900 rounded-3xl p-8 text-white">
+                            <h4 class="text-xl font-black mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z"></path></svg>
+                                Permanência Estudantil
+                            </h4>
+                            <div class="text-sm text-emerald-100 space-y-4">
+                                <p>A UNIFESP não quer apenas que você entre, mas que você se forme. Através da <strong>PRAE</strong>, você tem direito a:</p>
+                                <ul class="list-disc list-inside space-y-1 opacity-90">
+                                    <li>Auxílio Alimentação e Restaurante Universitário</li>
+                                    <li>Auxílio Moradia ou Residência Estudantil</li>
+                                    <li>Auxílio Transporte e Creche</li>
+                                    <li>Bolsas de Apoio Acadêmico (PBA)</li>
+                                </ul>
+                            </div>
+                            <a href="https://www.unifesp.br/reitoria/prae/" target="_blank" class="inline-block mt-6 text-xs font-bold uppercase tracking-widest border-b-2 border-emerald-400 pb-1 hover:text-emerald-300 transition-colors">Ver Editais da PRAE →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="location.reload()" class="text-gray-400 font-bold hover:text-green-700 text-xs uppercase tracking-widest">Refazer Questionário</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-100 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">© 2024 UNIFESP • TCC Morisson A. Almeida Lima • Design Educacional</p>
+        </div>
+    </footer>
+
+    <script>
+        const courses = {
+            DE: {
+                name: "Design Educacional",
+                modality: "EAD / Semipresencial",
+                campus: "Campus Guarulhos",
+                description: "Vocaçao para inovar no ensino. Você usará tecnologia e criatividade para desenhar experiências de aprendizagem acessíveis e engajadoras.",
+                tips: ["Criação de materiais digitais", "Psicologia da Aprendizagem", "Inovação em Ambientes Virtuais"]
+            },
+            MED: {
+                name: "Medicina",
+                modality: "Presencial (Integral)",
+                campus: "Campus São Paulo",
+                description: "Foco no cuidado humano e rigor científico. Atuação direta na saúde pública com base no humanismo.",
+                tips: ["Biologia Humana e Genética", "Saúde Coletiva e SUS", "Prática Clínica e Ética"]
+            },
+            EP: {
+                name: "Economia",
+                modality: "Presencial",
+                campus: "Campus Osasco",
+                description: "Entender o mundo através dos números e políticas. Ideal para quem quer gerir recursos públicos ou privados de forma ética.",
+                tips: ["Matemática Financeira", "Políticas Públicas", "Análise de Dados Sociais"]
+            },
+            PSIC: {
+                name: "Psicologia",
+                modality: "Presencial",
+                campus: "Baixada Santista",
+                description: "Escuta e compreensão social. Trabalho focado na saúde mental e nas relações humanas em diversos contextos.",
+                tips: ["Teorias da Personalidade", "Saúde Mental Comunitária", "Desenvolvimento Humano"]
+            },
+            ICT: {
+                name: "Ciência e Tecnologia",
+                modality: "Presencial",
+                campus: "São José dos Campos",
+                description: "A base da inovação. Um curso interdisciplinar que abre portas para engenharias e desenvolvimento tecnológico de ponta.",
+                tips: ["Lógica e Programação", "Física Aplicada", "Matemática Avançada"]
+            }
+        };
+
+        const questions = [
+            { category: "Interesses", q: "Qual atividade mais te motiva em um projeto?", options: [
+                { text: "Organizar informações para facilitar o aprendizado.", score: "DE" },
+                { text: "Entender como o corpo humano funciona e curar.", score: "MED" },
+                { text: "Otimizar recursos para reduzir desigualdades.", score: "EP" },
+                { text: "Apoiar pessoas em suas dificuldades emocionais.", score: "PSIC" },
+                { text: "Criar soluções tecnológicas ou automatizadas.", score: "ICT" }
+            ]},
+            { category: "Habilidades", q: "Qual é sua maior facilidade?", options: [
+                { text: "Comunicar ideias de forma clara e visual.", score: "DE" },
+                { text: "Observar detalhes e diagnosticar problemas.", score: "MED" },
+                { text: "Raciocinar logicamente com números e estatísticas.", score: "EP" },
+                { text: "Ouvir com empatia e mediar conversas.", score: "PSIC" },
+                { text: "Montar, desmontar ou programar ferramentas.", score: "ICT" }
+            ]},
+            { category: "Ambiente", q: "Como você prefere trabalhar?", options: [
+                { text: "Criando conteúdos no computador ou ambientes digitais.", score: "DE" },
+                { text: "Em contato direto com pacientes e ambientes de saúde.", score: "MED" },
+                { text: "Analisando cenários econômicos e relatórios de gestão.", score: "EP" },
+                { text: "Em espaços de escuta, escolas ou comunidades.", score: "PSIC" },
+                { text: "Em laboratórios de testes ou empresas de tecnologia.", score: "ICT" }
+            ]},
+            { category: "Impacto", q: "Como você quer mudar o mundo?", options: [
+                { text: "Tornando a educação acessível para todos.", score: "DE" },
+                { text: "Salvando vidas e promovendo a saúde pública.", score: "MED" },
+                { text: "Construindo uma economia mais justa e eficiente.", score: "EP" },
+                { text: "Promovendo o bem-estar mental e social.", score: "PSIC" },
+                { text: "Inovando tecnicamente para o progresso do país.", score: "ICT" }
+            ]},
+            { category: "Leitura", q: "Qual desses assuntos mais te atrai?", options: [
+                { text: "Novas formas de ensinar e tecnologias educacionais.", score: "DE" },
+                { text: "Descobertas científicas sobre doenças e tratamentos.", score: "MED" },
+                { text: "Notícias sobre mercado, governo e desenvolvimento.", score: "EP" },
+                { text: "Comportamento humano e relações sociais.", score: "PSIC" },
+                { text: "Inteligência Artificial, robótica e espaço.", score: "ICT" }
+            ]},
+            { category: "Desafios", q: "Diante de um problema complexo, você primeiro:", options: [
+                { text: "Pensa em como explicar o problema para os outros.", score: "DE" },
+                { text: "Analisa os sinais vitais ou biológicos da situação.", score: "MED" },
+                { text: "Calcula o impacto financeiro ou estratégico.", score: "EP" },
+                { text: "Tenta entender como as pessoas se sentem sobre isso.", score: "PSIC" },
+                { text: "Divide o problema em partes lógicas e técnicas.", score: "ICT" }
+            ]},
+            { category: "Social", q: "O que você mais valoriza em uma universidade?", options: [
+                { text: "A flexibilidade do ensino a distância e recursos digitais.", score: "DE" },
+                { text: "O compromisso com o SUS e hospitais universitários.", score: "MED" },
+                { text: "A análise crítica das políticas de desenvolvimento.", score: "EP" },
+                { text: "A inserção comunitária e a saúde coletiva.", score: "PSIC" },
+                { text: "A infraestrutura de laboratórios e pesquisa aplicada.", score: "ICT" }
+            ]},
+            { category: "Curiosidade", q: "O que você faria em um tempo livre?", options: [
+                { text: "Aprenderia a mexer em um novo software de edição.", score: "DE" },
+                { text: "Leria sobre anatomia ou primeiros socorros.", score: "MED" },
+                { text: "Acompanharia as variações da economia global.", score: "EP" },
+                { text: "Conversaria profundamente sobre a vida com alguém.", score: "PSIC" },
+                { text: "Tentaria consertar algo ou aprender a programar.", score: "ICT" }
+            ]},
+            { category: "Futuro", q: "Onde você se vê daqui a 10 anos?", options: [
+                { text: "Gerindo projetos de treinamento em grandes empresas.", score: "DE" },
+                { text: "Atuando como médico em hospitais ou clínicas.", score: "MED" },
+                { text: "Trabalhando em órgãos de planejamento ou finanças.", score: "EP" },
+                { text: "Trabalhando com terapia ou assistência social.", score: "PSIC" },
+                { text: "Liderando equipes de desenvolvimento tecnológico.", score: "ICT" }
+            ]},
+            { category: "Valores", q: "Qual palavra melhor define seu perfil?", options: [
+                { text: "Criatividade Educativa", score: "DE" },
+                { text: "Cuidado Científico", score: "MED" },
+                { text: "Estratégia Social", score: "EP" },
+                { text: "Empatia Humana", score: "PSIC" },
+                { text: "Inovação Lógica", score: "ICT" }
+            ]}
+        ];
+
+        let currentQuestion = 0;
+        let scores = { DE: 0, MED: 0, EP: 0, PSIC: 0, ICT: 0 };
+        let userData = {};
+
+        function startTest() {
+            const name = document.getElementById('user-name').value;
+            if(!name) return alert("Por favor, preencha seu nome!");
+            
+            userData = {
+                name: name,
+                school: document.getElementById('user-school').value,
+                quota: document.getElementById('user-quota').value
+            };
+
+            document.getElementById('step-intro').classList.add('hidden');
+            document.getElementById('step-quiz').classList.remove('hidden');
+            document.getElementById('progress-container').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('question-category').innerText = q.category;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, i) => {
+                const btn = document.createElement('div');
+                btn.className = "option-card bg-white p-5 flex items-center shadow-sm animate-in slide-in-from-bottom-2";
+                btn.style.animationDelay = (i * 50) + 'ms';
+                btn.innerHTML = `<span class="text-gray-700 font-semibold text-sm md:text-base">${opt.text}</span>`;
+                btn.onclick = () => selectOption(opt.score);
+                container.appendChild(btn);
+            });
+
+            const progress = Math.round((currentQuestion / questions.length) * 100);
+            document.getElementById('progress-bar').style.width = progress + "%";
+            document.getElementById('progress-text').innerText = progress + "%";
+            document.getElementById('current-step-label').innerText = `Questão ${currentQuestion + 1} de ${questions.length}`;
+        }
+
+        function selectOption(score) {
+            scores[score]++;
+            currentQuestion++;
+            if(currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('step-quiz').classList.add('hidden');
+            document.getElementById('progress-container').classList.add('hidden');
+            document.getElementById('step-result').classList.remove('hidden');
+
+            const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            const course = courses[winner];
+
+            document.getElementById('user-congrats').innerText = `Tudo pronto, ${userData.name}!`;
+            document.getElementById('result-course-name').innerText = course.name;
+            document.getElementById('result-modality-badge').innerText = course.modality;
+            document.getElementById('result-campus').innerText = course.campus;
+            document.getElementById('course-description').innerText = course.description;
+            
+            const tips = document.getElementById('study-tips');
+            tips.innerHTML = course.tips.map(t => `<li>• ${t}</li>`).join('');
+
+            generateIngressoInfo(course.name);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function generateIngressoInfo(courseName) {
+            const content = document.getElementById('quota-analysis-content');
+            let text = "";
+
+            if(userData.school === 'publica') {
+                text = `<p><strong>Seu Direito:</strong> Por vir de escola pública, você tem direito à reserva de 50% das vagas (Lei 12.711). Isso significa que você concorre em grupos específicos onde a nota de corte costuma ser menor.</p>`;
+                if(userData.quota === 'ppi') text += `<p><strong>Ação Inclusiva:</strong> Como autodeclarado PPI, você participa de bancas de heteroidentificação que garantem a legitimidade da sua vaga e evitam fraudes.</p>`;
+                if(userData.quota === 'baixa_renda') text += `<p><strong>Prioridade Social:</strong> Com renda inferior a 1 salário mínimo, você terá prioridade máxima nos editais de permanência após a matrícula.</p>`;
+            } else {
+                text = `<p><strong>Ingresso:</strong> Você concorre via Ampla Concorrência no SiSU. Fique atento aos pesos das notas do ENEM para o curso de ${courseName}, pois eles variam entre os campi da UNIFESP.</p>`;
+            }
+
+            text += `<p><strong>Próximo Passo:</strong> O SISU acontece geralmente em janeiro. Use sua nota do ENEM e escolha a UNIFESP como sua 1ª opção!</p>`;
+            content.innerHTML = text;
+        }
+    </script>
+</body>
+</html>
